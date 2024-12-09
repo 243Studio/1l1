@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Show
+{% endblock %}
+
+{% block main %}
+
+    <div class = "mb-3">
+        {% if credit > 0 %}
+        <p>You have <b>{{credit}}</b> credits</p>
+        <p>You last logged in on <b>{{last_login}}</b></p>
+        {% else %}
+        {% endif %}
+    </div>
+    <div class= "mb-3">
+        {%if links %}
+        <table class="table">
+            <thead>
+                <tr >
+                    <th scope="col">
+                        Title
+                    </th >
+                    <th scope="col">
+                        Description
+                    </th>
+                    <th scope="col">
+                        Views
+                    </th>
+                    <th scope="col">
+                        Origin
+                    </th>
+                    <th scope="col">
+                        Destination
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                {% for link in links %}
+                <tr>
+                        <td>{{ link.title }}</td>
+                        <td>{{ link.description}}</td>
+                        <td>{{ link.views }}</td>
+                        <td>
+                            <a href={{link.origin}} target = "_blank">
+                                {{link.origin}}
+                            </a>
+                        </td>
+                        <td>
+                            <a id="destination" target = "_blank"href="link/{{link.destination}}">
+                                {{link.destination}}
+                            </a>
+                        </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {%else%}
+        <p>No shortened links yet</p>
+        {%endif%}
+
+    </div>
+    {% block javascript %}
+
+    <!-- The contents of myscript.js will be loaded inside the script tag -->
+        <script type="text/javascript">
+            x = window.location.href
+            url = document.querySelectorAll("#destination")
+
+            url.forEach((item)=>
+            {
+                item.innerText = `${item.href}`
+            }
+            )
+        </script>
+    {% endblock %}
+{% endblock %}
