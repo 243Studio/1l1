@@ -1,5 +1,5 @@
 # tkit3 - your link shortener
-#### Video Demo: https://youtu.be/SYoiwjDwzNo
+this web application will live here https://tkit3.com (soon)
 ### Description: A link shortener
 
 This web-based application is a link shortener. Something like bitly or the linkedIn link shortener.
