@@ -30,12 +30,10 @@ def after_request(response):
 
 
 @app.route("/")
-@login_required
 def index():
     """Home page"""
     try:
-        return redirect("/show")
-        ##return render_template("index.html", user = session["username"])
+        return render_template("index.html")
     except ValueError:
         return apology("There is an error")
 
@@ -93,7 +91,7 @@ def login():
         session["username"] = rows[0]["username"]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/show")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -209,6 +207,6 @@ def register():
         except ValueError:
             return apology("Value error")
 
-        return redirect("/")
+        return redirect("/login")
     return render_template("register.html")
 
