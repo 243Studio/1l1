@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Create url
+{% endblock %}
+
+{% block main %}
+    <form action="/create" method="post">
+        <div class="mb-3 ">
+            <input required autocomplete="off" autofocus class="form-control mx-auto w-auto" name="title" placeholder="Title" type="text">
+        </div>
+        <div class="mb-3 ">
+            <input id="custom-slug" autocomplete="off" autofocus class="form-control mx-auto w-auto" name="slug" placeholder="custom slug" type="text">
+        </div>
+        <div class="mb-3">
+            <textarea required  autocomplete="off" class="form-control mx-auto w-auto"  rows="5" name="description" placeholder="description" type="text"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <input required autocomplete="off" class="form-control mx-auto w-auto" name="origin" placeholder="Original link" type="text">
+        </div>
+        <div class="mb-3">
+            <input id="char-numb" required autocomplete="off" class="form-control mx-auto w-auto" name="character" type="number" max="7" min="4">
+        </div>
+        <button class="btn btn-primary" type="submit">Create</button>
+    </form>
+    {% block javascript %}
+    <script src="static/createUrl.js"></script>
+    {% endblock %}
+{% endblock %}
