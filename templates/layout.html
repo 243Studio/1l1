@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="fr">
 
     <head>
 
@@ -31,20 +31,20 @@
                 <div class="collapse navbar-collapse" id="navbar">
                     {% if session["user_id"] %}
                     <ul class="navbar-nav me-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/create">Create</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/show">Link Gallery</a></li>
-                        <!--<li class="nav-item"><a class="nav-link" href="/quote">Quote</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/history">History</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/loan">Loan</a></li>-->
+                        <li class="nav-item"><a class="nav-link" href="/create">Créer</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/show">Galerie des liens</a></li>
+                        <!--<li class="nav-item"><a class="nav-link" href="/quote">Citation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/history">Historique</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/loan">Prêt</a></li>-->
                     </ul>
                     <ul class="navbar-nav ms-auto mt-2">
                         {{username}}
-                        <li class="nav-item"><button class="nav-link" id = "logout">Log Out</button></li>
+                        <li class="nav-item"><button class="nav-link" id = "logout">Se déconnecter</button></li>
                     </ul>
                     {% else %}
                     <ul class="navbar-nav ms-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register">S'inscrire</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Se connecter</a></li>
                     </ul>
                     {% endif %}
                 </div>
@@ -63,24 +63,22 @@
             {% block main %}{% endblock %}
             <div id="popup" class="off">
                 <div>
-                    <h3>Do you really wanna logout ?</h3>
-                    <button class="btn btn-primary" onclick="sendLogOut()">Yes</button>
-                    <button class="btn btn-primary" onclick="closePop()">No</button>
+                    <h3>Voulez-vous vraiment vous déconnecter ?</h3>
+                    <button class="btn btn-primary" onclick="sendLogOut()">Oui</button>
+                    <button class="btn btn-primary" onclick="closePop()">Non</button>
                 </div>
             </div>
         </main>
         <footer class="mb-5">
             <p class="mb-3 small text-center text-muted">
-                Made with love by <a target = "_blank" href="https://243studio.me/">243 studio</a>
+                made by <a target = "_blank" href="https://243studio.me/">243 studio</a> un projet de <a target = "_blank" href="https://wepo.cc/">wepo</a>
             </p>
-
-
         </footer>
 
     </body>
     <script type="text/javascript" src="static/popUp.js"></script>
     {% block javascript %}
 
-    <!-- The contents of myscript.js will be loaded inside the script tag -->
+    <!-- Le contenu de myscript.js sera chargé à l'intérieur de la balise script -->
     {% endblock %}
 </html>
