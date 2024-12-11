@@ -47,8 +47,6 @@ def link(slug):
             return apology("slug is empty")
         result = db.execute("SELECT DISTINCT title, description, origin FROM links WHERE destination = ?", slug)[0]
         user_agent = request.user_agent
-        print(user_agent)
-        print("platform:", user_agent.platform)
         if not result:
             return apology("That shortend link doesn't exist")
         db.execute("UPDATE views SET count = count + 1, last_viewed = CURRENT_TIMESTAMP  WHERE  link_id = (SELECT id FROM links WHERE destination = ?)", slug)
@@ -121,7 +119,6 @@ def show():
                            ''', session["user_id"])
         credit = db.execute("SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
         last_login = convert_to_local_time(db.execute("SELECT last_login as local_last_login from users WHERE id = ?", session["user_id"])[0]['local_last_login'])
-        print(last_login)
         return render_template("show.html", links = links, credit = credit, last_login = last_login)
     except ValueError:
         return apology("Error")
@@ -173,7 +170,6 @@ def create():
             db.execute("INSERT INTO views (link_id) VALUES (?);", link_id)
             db.execute("UPDATE credits  SET  amount = amount - ? WHERE user_id = ? ", credit_cost, session['user_id'])
 
-            print("successfully added the data")
             return redirect("/show")
         except ValueError:
             return apology("Value Error")
