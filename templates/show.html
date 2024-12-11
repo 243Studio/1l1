@@ -6,29 +6,29 @@
 
 {% block main %}
 
-    <div class = "mb-3">
+    <div class="mb-3">
         {% if credit > 0 %}
-        <p>You have <b>{{credit}}</b> credits</p>
-        <p>You last logged in on <b>{{last_login}}</b></p>
+        <p>Vous avez <b>{{credit}}</b> crédits</p>
+        <p>Votre dernière connexion était le <b>{{last_login}}</b></p>
         {% else %}
         {% endif %}
     </div>
-    <div class= "mb-3">
+    <div class="mb-3">
         {%if links %}
         <table class="table">
             <thead>
-                <tr >
+                <tr>
                     <th scope="col">
-                        Title
-                    </th >
+                        Titre
+                    </th>
                     <th scope="col">
                         Description
                     </th>
                     <th scope="col">
-                        Views
+                        Vues
                     </th>
                     <th scope="col">
-                        Origin
+                        Origine
                     </th>
                     <th scope="col">
                         Destination
@@ -37,34 +37,33 @@
             </thead>
             <tbody>
 
-
                 {% for link in links %}
                 <tr>
                         <td>{{ link.title }}</td>
-                        <td>{{ link.description}}</td>
+                        <td>{{ link.description }}</td>
                         <td>{{ link.views }}</td>
                         <td>
-                            <a href={{link.origin}} target = "_blank">
+                            <a href={{link.origin}} target="_blank">
                                 {{link.origin}}
                             </a>
                         </td>
                         <td>
-                            <a id="destination" target = "_blank"href="link/{{link.destination}}">
+                            <a id="destination" target="_blank" href="link/{{link.destination}}">
                                 {{link.destination}}
                             </a>
                         </td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
         {%else%}
-        <p>No shortened links yet</p>
+        <p>Aucun lien raccourci pour le moment</p>
         {%endif%}
 
     </div>
     {% block javascript %}
 
-    <!-- The contents of myscript.js will be loaded inside the script tag -->
+    <!-- Le contenu de myscript.js sera chargé dans la balise script -->
         <script type="text/javascript">
             x = window.location.href
             url = document.querySelectorAll("#destination")

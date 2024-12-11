@@ -5,7 +5,7 @@ from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.user_agent import UserAgent
 
-from helpers import apology, login_required, generate_slug, check_url, calculate_credit_cost, check_email
+from util.helpers import apology, login_required, generate_slug, check_url, calculate_credit_cost, check_email, convert_to_local_time
 
 # Configure application
 app = Flask(__name__)
@@ -16,7 +16,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///project.db")
+db = SQL("postgresql://postgres.ndbbpeyzrexezuqbyrse:thebeastisme596@aws-0-ca-central-1.pooler.supabase.com:5432/postgres")
 
 
 @app.after_request
@@ -29,12 +29,11 @@ def after_request(response):
 
 
 @app.route("/")
-@login_required
 def index():
     """Home page"""
     try:
-        return redirect("/show")
-        ##return render_template("index.html", user = session["username"])
+        #return redirect("/show")
+        return render_template("index.html")
     except ValueError:
         return apology("There is an error")
 
@@ -91,7 +90,7 @@ def login():
         session["username"] = rows[0]["username"]
 
         # Redirect user to home page
-        return redirect("/")
+        return redirect("/show")
 
     # User reached route via GET (as by clicking a link or via redirect)
     else:
@@ -120,9 +119,9 @@ def show():
                            ON links.id = views.link_id
                            WHERE links.user_id =?
                            ''', session["user_id"])
-        credit = db.execute("SELECT amount FROM credit WHERE user_id = ?", session["user_id"])[0]['amount']
-        last_login = db.execute("SELECT date(last_login, 'localtime') as last_login FROM users WHERE id = ?", session["user_id"])[0]['last_login']
-        print(credit)
+        credit = db.execute("SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
+        last_login = convert_to_local_time(db.execute("SELECT last_login as local_last_login from users WHERE id = ?", session["user_id"])[0]['local_last_login'])
+        print(last_login)
         return render_template("show.html", links = links, credit = credit, last_login = last_login)
     except ValueError:
         return apology("Error")
@@ -160,7 +159,7 @@ def create():
                 if (char_number > 7 or char_number < 4) and len(slug) == 0:
                     return apology("Incorrect number of characters")
                 credit_cost = calculate_credit_cost(char_number)
-            user_credit = db.execute("SELECT amount FROM credit WHERE user_id = ?", session["user_id"])[0]['amount']
+            user_credit = db.execute("SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
             if (user_credit < credit_cost):
                 return apology("Not enough credit")
             if check_url(origin) == False:
@@ -172,7 +171,7 @@ def create():
             db.execute("INSERT INTO links (title, description, origin, destination, user_id) VALUES(?,?,?,?,?)",title, description, origin, destination, session['user_id'])
             link_id = db.execute("SELECT last_insert_rowid()")[0]["last_insert_rowid()"]
             db.execute("INSERT INTO views (link_id) VALUES (?);", link_id)
-            db.execute("UPDATE credit  SET  amount = amount - ? WHERE user_id = ? ", credit_cost, session['user_id'])
+            db.execute("UPDATE credits  SET  amount = amount - ? WHERE user_id = ? ", credit_cost, session['user_id'])
 
             print("successfully added the data")
             return redirect("/show")
@@ -203,10 +202,10 @@ def register():
             hash = generate_password_hash(password)
             db.execute("INSERT INTO users (email, username, hash) VALUES(?, ?, ?)", email, username, hash)
             user_info = int(db.execute("SELECT id FROM users WHERE username = ?", username)[0]['id'])
-            db.execute("INSERT INTO credit (user_id) VALUES(?) ",user_info)
+            db.execute("INSERT INTO credits (user_id) VALUES(?) ",user_info)
         except ValueError:
             return apology("Value error")
 
-        return redirect("/")
+        return redirect("/login")
     return render_template("register.html")
 
