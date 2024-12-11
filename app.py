@@ -5,7 +5,7 @@ from sqlalchemy.sql import text
 from flask import Flask, flash, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.user_agent import UserAgent
-from Flask_Session import Session
+from flask_session import Session
 from helpers import apology, login_required, generate_slug, check_url, calculate_credit_cost, check_email
 
 # Configure application
