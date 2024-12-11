@@ -46,7 +46,6 @@ def calculate_credit_cost(num):
 
             return result
     except (ValueError, TypeError):
-        print("NUM is wrong")
         return result
 
 
@@ -91,7 +90,6 @@ def login_required(f):
 
 def convert_to_local_time(utc_time):
     client_timezone = pytz.timezone("Africa/Kinshasa")
-    print(pytz.all_timezones)
     
     return datetime.astimezone(utc_time, client_timezone).strftime("%Y-%m-%d %H:%M")
 #.strftime("%Y-%m-%d %H:%M:%S")
