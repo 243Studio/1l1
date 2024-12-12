@@ -1,5 +1,5 @@
-# tkit3 - your link shortener
-this web application will live here https://tkit3.com (soon)
+# tkit3 - your URL shortener
+this web application will live here https://1l1.link (soon)
 ### Description: A link shortener
 
 This web-based application is a link shortener. Something like bitly or the linkedIn link shortener.
