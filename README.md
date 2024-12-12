@@ -79,5 +79,4 @@ Lorsqu'un utilisateur accède à un slug, le système vérifie si ce slug corres
 Sinon, une page d'erreur s'affiche pour signaler que le slug est invalide.
 
 ---
-
-Si vous le souhaitez, je peux transformer ce contenu en un fichier Word. Dois-je le faire ?
+this is a project by (243studio)[243.studio]
