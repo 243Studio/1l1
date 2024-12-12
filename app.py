@@ -166,7 +166,8 @@ def create():
 
 
             db.execute("INSERT INTO links (title, description, origin, destination, user_id) VALUES(?,?,?,?,?)",title, description, origin, destination, session['user_id'])
-            link_id = db.execute("SELECT last_insert_rowid()")[0]["last_insert_rowid()"]
+            link_id = db.execute("SELECT id FROM links ORDER BY id DESC ")[0]["id"]
+            print(link_id)
             db.execute("INSERT INTO views (link_id) VALUES (?);", link_id)
             db.execute("UPDATE credits  SET  amount = amount - ? WHERE user_id = ? ", credit_cost, session['user_id'])
 
