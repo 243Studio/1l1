@@ -38,13 +38,14 @@ def index():
         return apology("There is an error")
 
 
-@app.route("/link/<slug>")
-@login_required
+@app.route("/<slug>")
 def link(slug):
     """redirect"""
     try:
         if slug == "":
             return apology("slug is empty")
+        if slug in ["show", "create", "login", "logout", "register", "link"]:
+            return redirect(f"/{slug}")
         result = db.execute("SELECT DISTINCT title, description, origin FROM links WHERE destination = ?", slug)[0]
         user_agent = request.user_agent
         if not result:
