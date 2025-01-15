@@ -16,7 +16,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("postgresql://postgres.ndbbpeyzrexezuqbyrse:thebeastisme596@aws-0-ca-central-1.pooler.supabase.com:5432/postgres")
+db = SQL("postgresql://postgres:thebeastisme596@db.pxeafynpxzizonngufcr.supabase.co:5432/postgres")
 
 
 @app.after_request
