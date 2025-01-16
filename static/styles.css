@@ -1,9 +1,19 @@
 /* Size for brand */
+
+
+/* Import font from google*/
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@100;300;400;900&display=swap');
+
 nav .navbar-brand
 {
     font-size: xx-large;
 }
 
+body  {
+    font-family:'Londrina Solid';
+    font-weight: 300;
+    color: #021846;
+}
 
 /* Colors for brand */
 nav .navbar-brand .blue
@@ -41,7 +51,7 @@ nav .navbar-brand .green
 
 .main-logo{
  width:auto;
- height: 2rem;
+ height: 3rem;
 }
 .on{
     visibility:visible;
