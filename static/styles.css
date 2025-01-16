@@ -4,6 +4,7 @@ nav .navbar-brand
     font-size: xx-large;
 }
 
+
 /* Colors for brand */
 nav .navbar-brand .blue
 {
@@ -36,6 +37,11 @@ nav .navbar-brand .green
 }
 .off{
     visibility:hidden;
+}
+
+.main-logo{
+ width:auto;
+ height: 2rem;
 }
 .on{
     visibility:visible;
