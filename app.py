@@ -18,7 +18,6 @@ Session(app)
 # Configure the SQL database
 db = SQL(f"postgresql://{env['DB_USER']}:{env['DB_PASSWORD']}@{env['DB_HOST']}:{env['DB_PORT']}/{env['DB_DB']}")
 
-
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -32,11 +31,25 @@ def after_request(response):
 def index():
     """Home page"""
     try:
-        #return redirect("/show")
+        # return redirect("/show")
         return render_template("index.html")
     except ValueError:
         return apology("There is an error")
 
+def profile(slug):
+    """user profile"""
+    user = slug[1:]
+    try:
+        if slug == "":
+            return apology(f"{slug} does not exit")
+
+        user_info = db.execute(
+            "SELECT DISTINCT * FROM users WHERE username = ?", user)[0]
+        return render_template("profile.html", user=user_info)
+    except IndexError:
+        return apology(f"{slug} out of index")
+    return apology(f"{user} does not exist")
+    print(f"This is ")
 
 @app.route("/<slug>")
 def link(slug):
@@ -46,14 +59,22 @@ def link(slug):
             return apology("slug is empty")
         if slug in ["show", "create", "login", "logout", "register", "link"]:
             return redirect(f"/{slug}")
-        result = db.execute("SELECT DISTINCT title, description, origin FROM links WHERE destination = ?", slug)[0]
-        user_agent = request.user_agent
+
+        if slug[0] == "@":
+            return profile(slug)
+        result = db.execute(
+            "SELECT DISTINCT title, description, origin FROM links WHERE destination = ?", slug)[0]
+
         if not result:
             return apology("That shortend link doesn't exist")
+        user_agent = request.user_agent
+        print(user_agent)
         db.execute("UPDATE views SET count = count + 1, last_viewed = CURRENT_TIMESTAMP  WHERE  link_id = (SELECT id FROM links WHERE destination = ?)", slug)
         return redirect(result['origin'])
     except ValueError:
         return apology("There is an error")
+    except IndexError:
+        return apology(" Out of index sir!")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -75,7 +96,8 @@ def login():
 
         # Query database for username
         rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
+            "SELECT * FROM users WHERE username = ?", request.form.get(
+                "username")
         )
 
         # Ensure username exists and password is correct
@@ -118,17 +140,18 @@ def show():
                            ON links.id = views.link_id
                            WHERE links.user_id =?
                            ''', session["user_id"])
-        credit = db.execute("SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
-        last_login = convert_to_local_time(db.execute("SELECT last_login as local_last_login from users WHERE id = ?", session["user_id"])[0]['local_last_login'])
-        return render_template("show.html", links = links, credit = credit, last_login = last_login)
+        credit = db.execute(
+            "SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
+        last_login = convert_to_local_time(db.execute(
+            "SELECT last_login as local_last_login from users WHERE id = ?", session["user_id"])[0]['local_last_login'])
+        return render_template("show.html", links=links, credit=credit, last_login=last_login)
     except ValueError:
         return apology("Error")
     except IndexError:
         return redirect("/login")
 
 
-
-@app.route("/create", methods = ["GET", "POST"])
+@app.route("/create", methods=["GET", "POST"])
 @login_required
 def create():
     if request.method == "POST":
@@ -140,7 +163,7 @@ def create():
 
             slug = request.form.get("slug")
             if slug:
-                if len(slug.replace(" ","")) > 10:
+                if len(slug.replace(" ", "")) > 10:
                     return apology("This cannot be more than 10 characters")
                 else:
                     credit_cost = 5
@@ -150,14 +173,15 @@ def create():
             origin = request.form.get("origin")
 
             char_number = request.form.get("character")
-            if(len(char_number) != 0):
+            if (len(char_number) != 0):
                 char_number = int(char_number)
                 if not char_number and len(slug) == 0:
                     return apology("There is no character number")
                 if (char_number > 7 or char_number < 4) and len(slug) == 0:
                     return apology("Incorrect number of characters")
                 credit_cost = calculate_credit_cost(char_number)
-            user_credit = db.execute("SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
+            user_credit = db.execute(
+                "SELECT amount FROM credits WHERE user_id = ?", session["user_id"])[0]['amount']
             if (user_credit < credit_cost):
                 return apology("Not enough credit")
             if check_url(origin) == False:
@@ -165,18 +189,21 @@ def create():
 
             destination = generate_slug(char_number, slug)
 
-
-            db.execute("INSERT INTO links (title, description, origin, destination, user_id) VALUES(?,?,?,?,?)",title, description, origin, destination, session['user_id'])
-            link_id = db.execute("SELECT id FROM links ORDER BY id DESC ")[0]["id"]
+            db.execute("INSERT INTO links (title, description, origin, destination, user_id) VALUES(?,?,?,?,?)",
+                       title, description, origin, destination, session['user_id'])
+            link_id = db.execute(
+                "SELECT id FROM links ORDER BY id DESC ")[0]["id"]
             print(link_id)
             db.execute("INSERT INTO views (link_id) VALUES (?);", link_id)
-            db.execute("UPDATE credits  SET  amount = amount - ? WHERE user_id = ? ", credit_cost, session['user_id'])
+            db.execute("UPDATE credits  SET  amount = amount - ? WHERE user_id = ? ",
+                       credit_cost, session['user_id'])
 
             return redirect("/show")
         except ValueError:
             return apology("Value Error")
     else:
         return render_template("create.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -191,19 +218,20 @@ def register():
             if not email:
                 return apology("Please input the email")
 
-            if check_email(email)==False:
+            if check_email(email) == False:
                 return apology("Incorrect email address")
             if not username or not password:
                 return apology("cannot create an account")
             if password_confirm != password:
                 return apology("You entered different password")
             hash = generate_password_hash(password)
-            db.execute("INSERT INTO users (email, username, hash) VALUES(?, ?, ?)", email, username, hash)
-            user_info = int(db.execute("SELECT id FROM users WHERE username = ?", username)[0]['id'])
-            db.execute("INSERT INTO credits (user_id) VALUES(?) ",user_info)
+            db.execute(
+                "INSERT INTO users (email, username, hash) VALUES(?, ?, ?)", email, username, hash)
+            user_info = int(db.execute(
+                "SELECT id FROM users WHERE username = ?", username)[0]['id'])
+            db.execute("INSERT INTO credits (user_id) VALUES(?) ", user_info)
         except ValueError:
             return apology("Value error")
 
         return redirect("/login")
     return render_template("register.html")
-
