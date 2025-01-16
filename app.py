@@ -36,7 +36,6 @@ def index():
     except ValueError:
         return apology("There is an error")
 
-
 def profile(slug):
     """user profile"""
     user = slug[1:]
@@ -52,7 +51,6 @@ def profile(slug):
     return apology(f"{user} does not exist")
     print(f"This is ")
 
-
 @app.route("/<slug>")
 def link(slug):
     """redirect"""
@@ -61,6 +59,7 @@ def link(slug):
             return apology("slug is empty")
         if slug in ["show", "create", "login", "logout", "register", "link"]:
             return redirect(f"/{slug}")
+
         if slug[0] == "@":
             return profile(slug)
         result = db.execute(
