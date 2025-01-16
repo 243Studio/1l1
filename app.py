@@ -9,14 +9,14 @@ from util.helpers import apology, login_required, generate_slug, check_url, calc
 
 # Configure application
 app = Flask(__name__)
+env = os.environ
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-# Configure CS50 Library to use SQLite database
-db = SQL("postgresql://postgres.ndbbpeyzrexezuqbyrse:thebeastisme596@aws-0-ca-central-1.pooler.supabase.com:5432/postgres")
+# Configure the SQL database
+db = SQL(f"postgresql://{env['DB_USER']}:{env['DB_PASSWORD']}@{env['DB_HOST']}:{env['DB_PORT']}/{env['DB_DB']}")
 
 
 @app.after_request
@@ -38,13 +38,14 @@ def index():
         return apology("There is an error")
 
 
-@app.route("/link/<slug>")
-@login_required
+@app.route("/<slug>")
 def link(slug):
     """redirect"""
     try:
         if slug == "":
             return apology("slug is empty")
+        if slug in ["show", "create", "login", "logout", "register", "link"]:
+            return redirect(f"/{slug}")
         result = db.execute("SELECT DISTINCT title, description, origin FROM links WHERE destination = ?", slug)[0]
         user_agent = request.user_agent
         if not result:
