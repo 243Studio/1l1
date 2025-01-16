@@ -71,7 +71,7 @@ def link(slug):
         user_agent = request.user_agent
         print(user_agent)
         db.execute("UPDATE views SET count = count + 1, last_viewed = CURRENT_TIMESTAMP  WHERE  link_id = (SELECT id FROM links WHERE destination = ?)", slug)
-        return redirect(result[0]['origin'])
+        return redirect(result['origin'])
     except ValueError:
         return apology("There is an error")
     except IndexError:

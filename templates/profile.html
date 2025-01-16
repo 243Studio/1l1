@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    profile
+{% endblock %}
+
+{% block main %}
+
+    <div class="mb-3">
+        <p>{{user.id}}</p>
+        <p>{{user.created_at}}</p>
+        <p>{{user.username}}</p>
+        <p>{{user.last_login}}</p>
+        <p>{{user.email}}</p>
+
+
+    </div>
+    <div class="mb-3">
+        
+
+    </div>
+    
+{% endblock %}
