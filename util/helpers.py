@@ -3,7 +3,7 @@ import re
 from flask import render_template, session, redirect
 from functools import wraps
 from datetime import datetime
-import pytz
+
 
 
 def generate_slug(num = 7, custom_slug=""):
